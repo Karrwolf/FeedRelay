@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FeedRelay - RSS to Discord</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">📡</span>
+                <h1>FeedRelay</h1>
+            </div>
+            <p class="tagline">RSS → Discord en temps réel</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-value" id="feedCount">0</span>
+                    <span class="stat-label">Feeds actifs</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="articlesSent">0</span>
+                    <span class="stat-label">Articles envoyés</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="webhookStatus">Non configuré</span>
+                    <span class="stat-label">Webhook Discord</span>
+                </div>
+            </div>
+
+            <!-- Two Column Layout -->
+            <div class="grid">
+                <!-- Left Column: Configuration -->
+                <div class="column">
+                    <!-- Discord Webhook Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>🎮 Webhook Discord</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="webhookUrl">URL du Webhook</label>
+                                <input type="url" id="webhookUrl" placeholder="https://discord.com/api/webhooks/...">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="webhookUsername">Nom du bot</label>
+                                    <input type="text" id="webhookUsername" placeholder="FeedRelay">
+                                </div>
+                                <div class="form-group">
+                                    <label for="embedColor">Couleur</label>
+                                    <input type="color" id="embedColor" value="#5865F2">
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <button class="btn btn-primary" onclick="saveWebhook()">
+                                    💾 Sauvegarder
+                                </button>
+                                <button class="btn btn-secondary" onclick="testWebhook()">
+                                    🧪 Tester
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add Feed Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>➕ Ajouter un Feed RSS</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="feedUrl">URL du flux RSS</label>
+                                <input type="url" id="feedUrl" placeholder="https://example.com/feed.xml">
+                            </div>
+                            <div class="form-group">
+                                <label for="feedName">Nom personnalisé (optionnel)</label>
+                                <input type="text" id="feedName" placeholder="Mon Feed">
+                            </div>
+                            <button class="btn btn-primary btn-full" onclick="addFeed()">
+                                ➕ Ajouter le Feed
+                            </button>
+                            
+                            <!-- Preview Area -->
+                            <div id="feedPreview" class="preview hidden">
+                                <h4>Aperçu</h4>
+                                <div id="previewContent"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Settings Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>⚙️ Paramètres</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="checkInterval">Intervalle de vérification</label>
+                                <select id="checkInterval">
+                                    <option value="1">Toutes les 1 minute</option>
+                                    <option value="5" selected>Toutes les 5 minutes</option>
+                                    <option value="10">Toutes les 10 minutes</option>
+                                    <option value="15">Toutes les 15 minutes</option>
+                                    <option value="30">Toutes les 30 minutes</option>
+                                    <option value="60">Toutes les heures</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-secondary btn-full" onclick="saveSettings()">
+                                💾 Sauvegarder les paramètres
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Feeds List -->
+                <div class="column">
+                    <div class="card card-feeds">
+                        <div class="card-header">
+                            <h2>📋 Feeds Actifs</h2>
+                            <button class="btn btn-small" onclick="checkNow()">
+                                🔄 Vérifier maintenant
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="feedsList" class="feeds-list">
+                                <div class="empty-state">
+                                    <span>📭</span>
+                                    <p>Aucun feed configuré</p>
+                                    <p class="small">Ajoutez votre premier flux RSS!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>FeedRelay v1.0 — Made with ❤️</p>
+        </footer>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
